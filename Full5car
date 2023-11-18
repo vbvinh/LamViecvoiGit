@@ -34,34 +34,17 @@ public class Full5car {
     private static final String regionXpath3 = "//*[@id='vec227687']";
     private static final String regionXpath4 = "//*[@id='vec227812']";
     private static final String regionXpath5 = "//*[@id='vec228935']";
+    private static final String odoXpath1 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
+
 
     public static void main(String[] args) {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
-        WebElement loginButtonOdo1 = driver.findElement(By.xpath("//*[@id='vec227685']/td[2]"));
-        loginButtonOdo1.click();
-        String odoXpath1 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
-        WebElement loginButtonOdo2 = driver.findElement(By.xpath("//*[@id='vec227665']/td[2]"));
-        loginButtonOdo2.click();
-        String odoXpath2 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
-        WebElement loginButtonOdo3 = driver.findElement(By.xpath("//*[@id='vec227687']/td[2]"));
-        loginButtonOdo3.click();
-        String odoXpath3 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
-        WebElement loginButtonOdo4 = driver.findElement(By.xpath("//*[@id='vec228935']/td[2]"));
-        loginButtonOdo4.click();
-        String odoXpath4 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
-        WebElement loginButtonOdo5 = driver.findElement(By.xpath("//*[@id='vec228935']/td[2]"));
-        loginButtonOdo5.click();
-        String odoXpath5 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
 
         try {
             login(driver);
+
 
             while (true) {
                 WebElement regionElement1 = driver.findElement(By.xpath(regionXpath1));
@@ -70,36 +53,36 @@ public class Full5car {
                 WebElement regionElement4 = driver.findElement(By.xpath(regionXpath4));
                 WebElement regionElement5 = driver.findElement(By.xpath(regionXpath5));
 
-
                 String elementRegion1 = regionElement1.getText();
                 String elementRegion2 = regionElement2.getText();
                 String elementRegion3 = regionElement3.getText();
                 String elementRegion4 = regionElement4.getText();
                 String elementRegion5 = regionElement5.getText();
 
+
                 WebDriverWait wait = new WebDriverWait(driver, 10);
                 // Lấy vùng và odometer của xe 1
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(regionXpath1))).click();
-                WebElement odoElement1 = driver.findElement(By.xpath(odoXpath1));
-                String elementOdo1 = odoElement1.getText();
+                WebElement loginButtonOdo1 = driver.findElement(By.xpath("//*[@id='vec227685']/td[2]"));
+                loginButtonOdo1.click();
+                String elementOdo1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
 
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(regionXpath2))).click();
-                WebElement odoElement2 = driver.findElement(By.xpath(odoXpath2));
-                String elementOdo2 = odoElement2.getText();
+                WebElement loginButtonOdo2 = driver.findElement(By.xpath("//*[@id='vec227665']/td[2]"));
+                loginButtonOdo2.click();
+                String elementOdo2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
 
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(regionXpath3))).click();
-                WebElement odoElement3 = driver.findElement(By.xpath(odoXpath3));
-                String elementOdo3 = odoElement3.getText();
+                WebElement loginButtonOdo3 = driver.findElement(By.xpath("//*[@id='vec227687']/td[2]"));
+                loginButtonOdo3.click();
+                String elementOdo3 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
 
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(regionXpath4))).click();
-                WebElement odoElement4 = driver.findElement(By.xpath(odoXpath4));
-                String elementOdo4 = odoElement4.getText();
+                WebElement loginButtonOdo4 = driver.findElement(By.xpath("//*[@id='vec227812']/td[2]"));
+                loginButtonOdo4.click();
+                String elementOdo4 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
 
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(regionXpath5))).click();
-                WebElement odoElement5 = driver.findElement(By.xpath(odoXpath5));
-                String elementOdo5 = odoElement5.getText();
+                WebElement loginButtonOdo5 = driver.findElement(By.xpath("//*[@id='vec228935']/td[2]"));
+                loginButtonOdo5.click();
+                String elementOdo5 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
 
-                writeToGoogleSheets(elementRegion1, elementRegion2, elementRegion3, elementRegion4, elementRegion5,elementOdo1, elementOdo2, elementOdo3, elementOdo4, elementOdo5);
+                writeToGoogleSheets(elementRegion1, elementRegion2, elementRegion3, elementRegion4, elementRegion5, elementOdo1, elementOdo2, elementOdo3, elementOdo4, elementOdo5);
 
                 // Delay for 5 minutes
                 TimeUnit.MINUTES.sleep(5);
@@ -112,7 +95,7 @@ public class Full5car {
     }
 
     private static void login(WebDriver driver) {
-        driver.get("http://quanlyxe.vn/Account.aspx/LogOn?ReturnUrl=%2fMonitor.aspx");
+        driver.get("http://quanlyxe.vn");
 
         WebElement userNameInput = driver.findElement(By.id("UserName"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].setAttribute('value', 'hatangmangmn')", userNameInput);
@@ -133,12 +116,15 @@ public class Full5car {
             Sheets sheetsService = getSheetsService();
 
             // Tạo danh sách các giá trị để cập nhật
-            List<List<Object>> values = Arrays.asList(
+            List<List<Object>> regionValues = Arrays.asList(
                     Collections.singletonList(elementRegion1),
                     Collections.singletonList(elementRegion2),
                     Collections.singletonList(elementRegion3),
                     Collections.singletonList(elementRegion4),
-                    Collections.singletonList(elementRegion5),
+                    Collections.singletonList(elementRegion5)
+
+            );
+            List<List<Object>> odoValues = Arrays.asList(
                     Collections.singletonList(elementOdo1),
                     Collections.singletonList(elementOdo2),
                     Collections.singletonList(elementOdo3),
@@ -146,18 +132,18 @@ public class Full5car {
                     Collections.singletonList(elementOdo5)
             );
 
-            // Tạo các đối tượng ValueRange cho từng giá trị
-            ValueRange bodyRegion1 = new ValueRange().setValues(values.subList(0, 1));
-            ValueRange bodyRegion2 = new ValueRange().setValues(values.subList(1, 2));
-            ValueRange bodyRegion3 = new ValueRange().setValues(values.subList(2, 3));
-            ValueRange bodyRegion4 = new ValueRange().setValues(values.subList(3, 4));
-            ValueRange bodyRegion5 = new ValueRange().setValues(values.subList(4, 5));
+            /// Tạo các đối tượng ValueRange cho từng giá trị
+            ValueRange bodyRegion1 = new ValueRange().setValues(regionValues.subList(0, 1));
+            ValueRange bodyRegion2 = new ValueRange().setValues(regionValues.subList(1, 2));
+            ValueRange bodyRegion3 = new ValueRange().setValues(regionValues.subList(2, 3));
+            ValueRange bodyRegion4 = new ValueRange().setValues(regionValues.subList(3, 4));
+            ValueRange bodyRegion5 = new ValueRange().setValues(regionValues.subList(4, 5));
 
-            ValueRange bodyOdo1 = new ValueRange().setValues(values.subList(0, 1));
-            ValueRange bodyOdo2 = new ValueRange().setValues(values.subList(1, 2));
-            ValueRange bodyOdo3 = new ValueRange().setValues(values.subList(2, 3));
-            ValueRange bodyOdo4 = new ValueRange().setValues(values.subList(3, 4));
-            ValueRange bodyOdo5 = new ValueRange().setValues(values.subList(4, 5));
+            ValueRange bodyOdo1 = new ValueRange().setValues(odoValues.subList(0, 1));
+            ValueRange bodyOdo2 = new ValueRange().setValues(odoValues.subList(1, 2));
+            ValueRange bodyOdo3 = new ValueRange().setValues(odoValues.subList(2, 3));
+            ValueRange bodyOdo4 = new ValueRange().setValues(odoValues.subList(3, 4));
+            ValueRange bodyOdo5 = new ValueRange().setValues(odoValues.subList(4, 5));
 
             // Cập nhật các ô tương ứng trong Google Sheets
             UpdateValuesResponse resultRegion1 = sheetsService.spreadsheets().values()
@@ -202,10 +188,10 @@ public class Full5car {
                     .execute();
 
             // In thông báo cập nhật thành công
-            System.out.println("Updated cells G1: " + resultOdo1.getUpdatedCells());
-            System.out.println("Updated cells G2: " + resultOdo2.getUpdatedCells());
-            System.out.println("Updated cells G3: " + resultOdo3.getUpdatedCells());
-            System.out.println("Updated cells G4: " + resultOdo4.getUpdatedCells());
+            System.out.println("Updated cells G1: " + resultRegion1.getUpdatedCells());
+            System.out.println("Updated cells G2: " + resultRegion2.getUpdatedCells());
+            System.out.println("Updated cells G3: " + resultRegion3.getUpdatedCells());
+            System.out.println("Updated cells G4: " + resultRegion4.getUpdatedCells());
             System.out.println("Updated cells G5: " + resultOdo5.getUpdatedCells());
             System.out.println("Updated cells H1: " + resultOdo1.getUpdatedCells());
             System.out.println("Updated cells H2: " + resultOdo2.getUpdatedCells());

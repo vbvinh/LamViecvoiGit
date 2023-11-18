@@ -35,7 +35,9 @@ public class Auto5car {
     private static final String XPATH4 = "//*[@id='vec227812']";
     private static final String XPATH5 = "//*[@id='vec228935']";
 
-    //CMU://*[@id="vec227812"]/td[2], RGA://*[@id="vec228935"]/td[2]
+    //*[@id="map"]/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]->odo chung
+    // Xpath: Quân-huyện: //*[@id='vec227665']/td[17]
+    
 
     public static void main(String[] args) {
         WebDriverManager.chromedriver().setup();

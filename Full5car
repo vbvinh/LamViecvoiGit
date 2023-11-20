@@ -47,6 +47,7 @@ public class Full5car {
 
 
             while (true) {
+                //driver.get("quanlyxe.vn/Monitor.aspx/MultiVehicle");
                 WebElement regionElement1 = driver.findElement(By.xpath(regionXpath1));
                 WebElement regionElement2 = driver.findElement(By.xpath(regionXpath2));
                 WebElement regionElement3 = driver.findElement(By.xpath(regionXpath3));
@@ -59,7 +60,7 @@ public class Full5car {
                 String elementRegion4 = regionElement4.getText();
                 String elementRegion5 = regionElement5.getText();
 
-
+                //driver.get("http://quanlyxe.vn");
                 WebDriverWait wait = new WebDriverWait(driver, 10);
                 // Lấy vùng và odometer của xe 1
                 WebElement loginButtonOdo1 = driver.findElement(By.xpath("//*[@id='vec227685']/td[2]"));
@@ -95,8 +96,8 @@ public class Full5car {
     }
 
     private static void login(WebDriver driver) {
-        driver.get("http://quanlyxe.vn");
-
+        driver.get("quanlyxe.vn/Monitor.aspx/MultiVehicle");
+       //*[@id="topMenu"]/div[2]/ul[1]/li[1]/a/i xPath home
         WebElement userNameInput = driver.findElement(By.id("UserName"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].setAttribute('value', 'hatangmangmn')", userNameInput);
 

@@ -80,6 +80,8 @@ public class Final5car {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            driver.quit();
+            main(args); // Gọi lại hàm main để bắt đầu chạy từ đầu
         } finally {
             driver.quit();
         }

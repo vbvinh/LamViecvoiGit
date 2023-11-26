@@ -1,5 +1,4 @@
 package org.example;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -16,7 +15,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -24,9 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class Full5car {
 
+public class Final5car {
     private static final String SPREADSHEET_ID = "1SrCeROZdJhmiCOIJHwXSHGVdYkeCG69wMW-QQDcAtAw";
     private static final String SERVICE_ACCOUNT_JSON_PATH = "/Users/baovinhvo/Downloads/car12345678-df8df8661ce7.json";
     private static final String regionXpath1 = "//*[@id='vec227685']";
@@ -35,58 +35,50 @@ public class Full5car {
     private static final String regionXpath4 = "//*[@id='vec227812']";
     private static final String regionXpath5 = "//*[@id='vec228935']";
     private static final String odoXpath1 = "//*[@id='map']/div[7]/div[3]/div[1]/div/div[2]/table/tbody/tr[2]/td[4]";
-
-
     public static void main(String[] args) {
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
-
-
         try {
             login(driver);
 
 
             while (true) {
-                //driver.get("quanlyxe.vn/Monitor.aspx/MultiVehicle");
+
                 WebElement regionElement1 = driver.findElement(By.xpath(regionXpath1));
                 WebElement regionElement2 = driver.findElement(By.xpath(regionXpath2));
                 WebElement regionElement3 = driver.findElement(By.xpath(regionXpath3));
                 WebElement regionElement4 = driver.findElement(By.xpath(regionXpath4));
                 WebElement regionElement5 = driver.findElement(By.xpath(regionXpath5));
-
                 String elementRegion1 = regionElement1.getText();
                 String elementRegion2 = regionElement2.getText();
                 String elementRegion3 = regionElement3.getText();
                 String elementRegion4 = regionElement4.getText();
                 String elementRegion5 = regionElement5.getText();
 
-                //driver.get("http://quanlyxe.vn");
+
+                driver.get("http://quanlyxe.vn");
                 WebDriverWait wait = new WebDriverWait(driver, 10);
                 // Lấy vùng và odometer của xe 1
                 WebElement loginButtonOdo1 = driver.findElement(By.xpath("//*[@id='vec227685']/td[2]"));
                 loginButtonOdo1.click();
                 String elementOdo1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
-
                 WebElement loginButtonOdo2 = driver.findElement(By.xpath("//*[@id='vec227665']/td[2]"));
                 loginButtonOdo2.click();
                 String elementOdo2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
-
                 WebElement loginButtonOdo3 = driver.findElement(By.xpath("//*[@id='vec227687']/td[2]"));
                 loginButtonOdo3.click();
                 String elementOdo3 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
-
                 WebElement loginButtonOdo4 = driver.findElement(By.xpath("//*[@id='vec227812']/td[2]"));
                 loginButtonOdo4.click();
                 String elementOdo4 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
-
                 WebElement loginButtonOdo5 = driver.findElement(By.xpath("//*[@id='vec228935']/td[2]"));
                 loginButtonOdo5.click();
                 String elementOdo5 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(odoXpath1))).getText();
-
                 writeToGoogleSheets(elementRegion1, elementRegion2, elementRegion3, elementRegion4, elementRegion5, elementOdo1, elementOdo2, elementOdo3, elementOdo4, elementOdo5);
-
                 // Delay for 5 minutes
-                TimeUnit.MINUTES.sleep(5);
+                driver.get("http://quanlyxe.vn/Monitor.aspx/MultiVehicle");
+                TimeUnit.MINUTES.sleep(1);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,28 +86,31 @@ public class Full5car {
             driver.quit();
         }
     }
+    private static String getCurrentTime() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return currentTime.format(formatter);
 
+    }
     private static void login(WebDriver driver) {
-        driver.get("quanlyxe.vn/Monitor.aspx/MultiVehicle");
-       //*[@id="topMenu"]/div[2]/ul[1]/li[1]/a/i xPath home
+        //driver.get("http://quanlyxe.vn");
+
+        driver.get("http://quanlyxe.vn/Monitor.aspx/MultiVehicle");
+        //*[@id="topMenu"]/div[2]/ul[1]/li[1]/a/i xPath home
         WebElement userNameInput = driver.findElement(By.id("UserName"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].setAttribute('value', 'hatangmangmn')", userNameInput);
 
         WebElement passwordInput = driver.findElement(By.id("Password"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].setAttribute('value', '123456')", passwordInput);
-
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.attributeToBe(userNameInput, "value", "hatangmangmn"));
         wait.until(ExpectedConditions.attributeToBe(passwordInput, "value", "123456"));
-
         WebElement loginButton = driver.findElement(By.name("login"));
         loginButton.click();
     }
-
     private static void writeToGoogleSheets(String elementRegion1, String elementRegion2, String elementRegion3, String elementRegion4, String elementRegion5, String elementOdo1, String elementOdo2, String elementOdo3,String elementOdo4, String elementOdo5) {
         try {
             Sheets sheetsService = getSheetsService();
-
             // Tạo danh sách các giá trị để cập nhật
             List<List<Object>> regionValues = Arrays.asList(
                     Collections.singletonList(elementRegion1),
@@ -123,7 +118,6 @@ public class Full5car {
                     Collections.singletonList(elementRegion3),
                     Collections.singletonList(elementRegion4),
                     Collections.singletonList(elementRegion5)
-
             );
             List<List<Object>> odoValues = Arrays.asList(
                     Collections.singletonList(elementOdo1),
@@ -132,20 +126,17 @@ public class Full5car {
                     Collections.singletonList(elementOdo4),
                     Collections.singletonList(elementOdo5)
             );
-
             /// Tạo các đối tượng ValueRange cho từng giá trị
             ValueRange bodyRegion1 = new ValueRange().setValues(regionValues.subList(0, 1));
             ValueRange bodyRegion2 = new ValueRange().setValues(regionValues.subList(1, 2));
             ValueRange bodyRegion3 = new ValueRange().setValues(regionValues.subList(2, 3));
             ValueRange bodyRegion4 = new ValueRange().setValues(regionValues.subList(3, 4));
             ValueRange bodyRegion5 = new ValueRange().setValues(regionValues.subList(4, 5));
-
             ValueRange bodyOdo1 = new ValueRange().setValues(odoValues.subList(0, 1));
             ValueRange bodyOdo2 = new ValueRange().setValues(odoValues.subList(1, 2));
             ValueRange bodyOdo3 = new ValueRange().setValues(odoValues.subList(2, 3));
             ValueRange bodyOdo4 = new ValueRange().setValues(odoValues.subList(3, 4));
             ValueRange bodyOdo5 = new ValueRange().setValues(odoValues.subList(4, 5));
-
             // Cập nhật các ô tương ứng trong Google Sheets
             UpdateValuesResponse resultRegion1 = sheetsService.spreadsheets().values()
                     .update(SPREADSHEET_ID, "Sheet1!G1", bodyRegion1)
@@ -187,32 +178,19 @@ public class Full5car {
                     .update(SPREADSHEET_ID, "Sheet1!H5", bodyOdo5)
                     .setValueInputOption("RAW")
                     .execute();
-
             // In thông báo cập nhật thành công
-            System.out.println("Updated cells G1: " + resultRegion1.getUpdatedCells());
-            System.out.println("Updated cells G2: " + resultRegion2.getUpdatedCells());
-            System.out.println("Updated cells G3: " + resultRegion3.getUpdatedCells());
-            System.out.println("Updated cells G4: " + resultRegion4.getUpdatedCells());
-            System.out.println("Updated cells G5: " + resultOdo5.getUpdatedCells());
-            System.out.println("Updated cells H1: " + resultOdo1.getUpdatedCells());
-            System.out.println("Updated cells H2: " + resultOdo2.getUpdatedCells());
-            System.out.println("Updated cells H3: " + resultOdo3.getUpdatedCells());
-            System.out.println("Updated cells H4: " + resultOdo4.getUpdatedCells());
-            System.out.println("Updated cells H5: " + resultOdo5.getUpdatedCells());
+            System.out.println("Đã cập nhật sheet lúc: "+ getCurrentTime());
 
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
         }
     }
-
-
     private static Sheets getSheetsService() throws IOException, GeneralSecurityException {
         FileInputStream credentialsStream = new FileInputStream("/Users/baovinhvo/Downloads/car12345678-df8df8661ce7.json");
         GoogleCredential credentials = GoogleCredential.fromStream(credentialsStream)
                 .createScoped(Collections.singleton("https://www.googleapis.com/auth/spreadsheets"));
         HttpTransport httpTransport = new NetHttpTransport();
         JsonFactory jsonFactory = new JacksonFactory();
-
         return new Sheets.Builder(httpTransport, jsonFactory, credentials)
                 .setApplicationName("Your Application Name")
                 .build();
